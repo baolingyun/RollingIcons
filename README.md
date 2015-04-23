@@ -1,2 +1,0 @@
-# RollingIcons
-RollingIcons game
