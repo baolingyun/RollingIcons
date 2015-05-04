@@ -1,11 +1,14 @@
 package com.rollingicons.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.utils.Array;
 
-public class GameScreen extends ScreenAdapter implements InputProcessor {
+public class GameScreen extends ScreenAdapter {
 	private IconsWorldRenderer iconsWorldRenderer = new IconsWorldRenderer();
 	private IconsWorld iconsWorld = new IconsWorld();
 
@@ -13,7 +16,8 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
 		iconsWorldRenderer.SetIconsWorld(iconsWorld);
 		iconsWorld.CreateEdge(iconsWorldRenderer.camera);
 		iconsWorld.CreateIcon();
-		Gdx.input.setInputProcessor(this);
+		//iconsWorld.CreateIcon();
+		//iconsWorld.CreateIcon();
 	}
 
 	@Override
@@ -21,56 +25,26 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
 		Gdx.graphics.getGL20().glClearColor(0, 0, 0, 0);
 		Gdx.graphics.getGL20().glClear(
 				GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+		if (Gdx.input.justTouched()) {
+			Vector3 touchPoint = new Vector3();
+			iconsWorldRenderer.camera.unproject(touchPoint.set(
+					Gdx.input.getX(), Gdx.input.getY(), 0));
+
+			Array<Fixture> fixtures = new Array<Fixture>();
+			iconsWorld.physicalWorld.getFixtures(fixtures);
+
+			for (Fixture fixture : fixtures) {
+				if (fixture.testPoint(touchPoint.x, touchPoint.y)) {
+					Body hitBody = fixture.getBody();
+					hitBody.setLinearVelocity(0, 0);
+					hitBody.setAngularVelocity(0);
+				}
+			}
+		}
+
 		iconsWorldRenderer.render();
 		iconsWorld.physicalWorld.step(1 / 60f, 6, 2);
-	}
 
-	@Override
-	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		iconsWorld.icons.get(0).body.applyForceToCenter(-2000f, 2000f, true);
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }

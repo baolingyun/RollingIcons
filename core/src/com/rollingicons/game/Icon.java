@@ -21,8 +21,8 @@ public class Icon {
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = polygon;
 		fixtureDef.density = 0.5f;
-		fixtureDef.friction = 1.0f;
-		fixtureDef.restitution = 0.9f;
+		fixtureDef.friction = 0.0f;
+		fixtureDef.restitution = 1.0f;
 		body.setTransform(new Vector2(C.PPM(100), C.PPM(100)), 1);
 		Fixture fixture = body.createFixture(fixtureDef);
 		polygon.dispose();
