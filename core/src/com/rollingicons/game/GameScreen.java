@@ -16,7 +16,7 @@ public class GameScreen extends ScreenAdapter {
 		iconsWorldRenderer.SetIconsWorld(iconsWorld);
 		iconsWorld.CreateEdge(iconsWorldRenderer.camera);
 		iconsWorld.CreateIcon();
-		//iconsWorld.CreateIcon();
+		iconsWorld.CreateIcon();
 		//iconsWorld.CreateIcon();
 	}
 

@@ -20,7 +20,7 @@ public class IconsWorld {
 	public void CreateIcon() {
 		Icon icon = new Icon();
 		icon.Create(physicalWorld);
-		icon.body.applyForceToCenter(-2000f, 2000f, true);
+		icon.body.applyForceToCenter(-500f, 500f, true);
 		icons.add(icon);
 	}
 
