@@ -17,13 +17,13 @@ public class Icon {
 		bodyDef.type = BodyType.DynamicBody;
 		body = world.createBody(bodyDef);
 		PolygonShape polygon = new PolygonShape();
-		polygon.setAsBox(C.PPM(60f), C.PPM(60f));
+		polygon.setAsBox(60f, 60f);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = polygon;
 		fixtureDef.density = 0.5f;
 		fixtureDef.friction = 0.0f;
 		fixtureDef.restitution = 1.0f;
-		body.setTransform(new Vector2(C.PPM(100), C.PPM(100)), 1);
+		body.setTransform(new Vector2(100, 100), 1);
 		Fixture fixture = body.createFixture(fixtureDef);
 		polygon.dispose();
 	}

@@ -20,18 +20,18 @@ public class IconsWorld {
 	public void CreateIcon() {
 		Icon icon = new Icon();
 		icon.Create(physicalWorld);
-		icon.body.applyForceToCenter(-500f, 500f, true);
+		icon.body.applyForceToCenter(-20000000f, 20000000f, true);
 		icons.add(icon);
 	}
 
 	void CreateEdge(OrthographicCamera camera) {
-		bedge.Create(physicalWorld, 0, C.PPM(1.0f), camera.viewportWidth,
-				C.PPM(1.0f));
+		bedge.Create(physicalWorld, 0, 1.0f, camera.viewportWidth,
+				1.0f);
 		tedge.Create(physicalWorld, 0, camera.viewportHeight,
-				camera.viewportWidth, C.PPM(1.0f));
-		ledge.Create(physicalWorld, 0, camera.viewportHeight, C.PPM(1.0f),
+				camera.viewportWidth, 1.0f);
+		ledge.Create(physicalWorld, 0, camera.viewportHeight, 1.0f,
 				camera.viewportHeight);
-		redge.Create(physicalWorld, camera.viewportWidth - C.PPM(1.0f),
-				camera.viewportHeight, C.PPM(1.0f), camera.viewportHeight);
+		redge.Create(physicalWorld, camera.viewportWidth - 1.0f,
+				camera.viewportHeight, 1.0f, camera.viewportHeight);
 	}
 }
