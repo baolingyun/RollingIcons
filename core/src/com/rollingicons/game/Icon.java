@@ -11,20 +11,21 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Icon {
 	public Body body;
+	public Fixture fixture;
 
 	public void Create(World world) {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
 		body = world.createBody(bodyDef);
 		PolygonShape polygon = new PolygonShape();
-		polygon.setAsBox(60f, 60f);
+		polygon.setAsBox(0.6f, 0.6f);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = polygon;
 		fixtureDef.density = 0.5f;
 		fixtureDef.friction = 0.0f;
 		fixtureDef.restitution = 1.0f;
-		body.setTransform(new Vector2(100, 100), 1);
-		Fixture fixture = body.createFixture(fixtureDef);
+		body.setTransform(new Vector2(1, 1), 1);
+		fixture = body.createFixture(fixtureDef);
 		polygon.dispose();
 	}
 }
