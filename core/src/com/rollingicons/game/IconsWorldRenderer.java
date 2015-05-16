@@ -2,7 +2,9 @@ package com.rollingicons.game;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,11 +16,12 @@ public class IconsWorldRenderer {
 	public IconsWorld iconsWorld;
 	public OrthographicCamera camera;
 
-	SpriteBatch batch = new SpriteBatch();
+	private SpriteBatch batch = new SpriteBatch();
 	
 	//DEBUG
-	ShapeRenderer shapeRender = new ShapeRenderer();
-	Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+	
+	private int index = 0;
 	
 	public void SetIconsWorld(IconsWorld iw) {
 		iconsWorld = iw;
@@ -43,7 +46,8 @@ public class IconsWorldRenderer {
 	}
 
 	private void renderIcons() {
-	    shapeRender.begin(ShapeType.Filled);
+	    batch.enableBlending();
+	    batch.begin();
 	    
 		for (Icon icon : iconsWorld.icons) {
 			
@@ -52,15 +56,14 @@ public class IconsWorldRenderer {
 			pos.y = icon.body.getPosition().y;
 			pos.z = 0;
 			
-			camera.project(pos);
-			shapeRender.setColor(Color.BLUE);
-			shapeRender.identity();
-			shapeRender.translate(pos.x, pos.y, 0);
-			shapeRender.rotate(0, 0, 1, icon.body.getAngle() * MathUtils.radDeg);
-			shapeRender.rect(-120 / 2, -120 / 2, 120, 120);		
+			Texture texture = Assets.icons.get(index);
+			index++;
+			index %= 6;
+			TextureRegion region = new TextureRegion(texture, 0, 0, texture.getWidth(), texture.getHeight());
+			batch.draw(region, pos.x - 0.8f, pos.y - 0.8f, 0.8f, 0.8f, 1.6f, 1.6f, 1, 1, icon.body.getAngle() * MathUtils.radDeg);
 		}
 		
-		shapeRender.end();
+		batch.end();
 	}
 	
 	public void renderBackground () {

@@ -32,6 +32,9 @@ public class GameScreen extends ScreenAdapter {
 		iconsWorld.CreateIcon();
 		iconsWorld.CreateIcon();
 	    iconsWorld.CreateIcon();
+	    iconsWorld.CreateIcon();
+	    iconsWorld.CreateIcon();
+	    iconsWorld.CreateIcon();
 	}
 
 	@Override
@@ -53,6 +56,8 @@ public class GameScreen extends ScreenAdapter {
 					hitBody.setAngularVelocity(0);
 				}
 			}
+			
+			Gdx.input.vibrate(50);
 		}
 
 		iconsWorldRenderer.render();

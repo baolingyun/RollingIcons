@@ -18,7 +18,7 @@ public class Icon {
 		bodyDef.type = BodyType.DynamicBody;
 		body = world.createBody(bodyDef);
 		PolygonShape polygon = new PolygonShape();
-		polygon.setAsBox(0.6f, 0.6f);
+		polygon.setAsBox(0.7f, 0.7f);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = polygon;
 		fixtureDef.density = 0.5f;
