@@ -25,5 +25,29 @@ public class Assets {
 		icons.add(loadTexture("data/icons/4.png"));
 		icons.add(loadTexture("data/icons/5.png"));
 		icons.add(loadTexture("data/icons/6.png"));
+		icons.add(loadTexture("data/icons/7.png"));
+		icons.add(loadTexture("data/icons/8.png"));
+		icons.add(loadTexture("data/icons/9.png"));
+		icons.add(loadTexture("data/icons/10.png"));
+		icons.add(loadTexture("data/icons/11.png"));
+		icons.add(loadTexture("data/icons/12.png"));
+		icons.add(loadTexture("data/icons/13.png"));
+		icons.add(loadTexture("data/icons/14.png"));
+		icons.add(loadTexture("data/icons/15.png"));
+		icons.add(loadTexture("data/icons/16.png"));
+		icons.add(loadTexture("data/icons/17.png"));
+		icons.add(loadTexture("data/icons/18.png"));
+		icons.add(loadTexture("data/icons/19.png"));
+		icons.add(loadTexture("data/icons/20.png"));
+		icons.add(loadTexture("data/icons/21.png"));
+		icons.add(loadTexture("data/icons/22.png"));
+		icons.add(loadTexture("data/icons/23.png"));
+		icons.add(loadTexture("data/icons/24.png"));
+		icons.add(loadTexture("data/icons/25.png"));
+		icons.add(loadTexture("data/icons/26.png"));
+		icons.add(loadTexture("data/icons/27.png"));
+		icons.add(loadTexture("data/icons/28.png"));
+		icons.add(loadTexture("data/icons/29.png"));
+		icons.add(loadTexture("data/icons/30.png"));
 	}
 }

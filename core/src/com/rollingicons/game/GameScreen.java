@@ -4,18 +4,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
+import com.rollingicons.game.Icon.Status;
 
 public class GameScreen extends ScreenAdapter {
-	
+
 	private float SCREEN_WIDTH = Gdx.graphics.getWidth() / 100;
 	private float SCREEN_HEIGHT = Gdx.graphics.getHeight() / 100;
-	
+
 	private IconsWorld iconsWorld = new IconsWorld();
-	private OrthographicCamera camera = new OrthographicCamera(SCREEN_WIDTH, SCREEN_HEIGHT);
+	private OrthographicCamera camera = new OrthographicCamera(SCREEN_WIDTH,
+			SCREEN_HEIGHT);
 
 	private IconsWorldRenderer iconsWorldRenderer = new IconsWorldRenderer();
 
@@ -28,13 +31,8 @@ public class GameScreen extends ScreenAdapter {
 		iconsWorldRenderer.SetCamera(camera);
 
 		iconsWorld.CreateEdge(camera);
-		
-		iconsWorld.CreateIcon();
-		iconsWorld.CreateIcon();
-	    iconsWorld.CreateIcon();
-	    iconsWorld.CreateIcon();
-	    iconsWorld.CreateIcon();
-	    iconsWorld.CreateIcon();
+
+		iconsWorld.Start();
 	}
 
 	@Override
@@ -49,17 +47,18 @@ public class GameScreen extends ScreenAdapter {
 					0));
 
 			for (Icon icon : iconsWorld.icons) {
-				Fixture fixture = icon.fixture;
-				if (fixture.testPoint(touchPoint.x, touchPoint.y)) {
-					Body hitBody = fixture.getBody();
-					hitBody.setLinearVelocity(0, 0);
-					hitBody.setAngularVelocity(0);
+				if (icon.status != Status.FINISHED) {
+					if (icon.HitTest(touchPoint.x, touchPoint.y)) {
+						icon.Hit();
+						iconsWorld.UpdateStatus(icon);
+						Gdx.input.vibrate(50);
+						break;
+					}
 				}
 			}
-			
-			Gdx.input.vibrate(50);
 		}
 
+		iconsWorld.CheckAndLevelUp();
 		iconsWorldRenderer.render();
 		iconsWorld.physicalWorld.step(1 / 60f, 6, 2);
 	}
