@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Assets {
 	public static Texture background;
-	public static TextureRegion backgroundRegion;
 	public static List<Texture> icons = new ArrayList<Texture>();
 	
 	public static Texture loadTexture (String file) {
@@ -17,7 +16,6 @@ public class Assets {
 	}
 	public static void load () {
 		background = loadTexture("data/background.jpg");
-		backgroundRegion = new TextureRegion(background, 0, 0, 320, 480);
 		
 		icons.add(loadTexture("data/icons/1.png"));
 		icons.add(loadTexture("data/icons/2.png"));

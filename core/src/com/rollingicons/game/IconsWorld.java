@@ -3,15 +3,15 @@ package com.rollingicons.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Disposable;
 import com.rollingicons.game.Icon.Status;
 
-public class IconsWorld {
+public class IconsWorld implements Disposable {
 
-	private int level = 8;
+	private int level = 4;
 
 	public List<Icon> icons = new ArrayList<Icon>();
 
@@ -108,5 +108,10 @@ public class IconsWorld {
 				physicalWorld.destroyBody(one_icon.body);
 			}
 		}
+	}
+
+	@Override
+	public void dispose() {
+		physicalWorld.dispose();
 	}
 }
