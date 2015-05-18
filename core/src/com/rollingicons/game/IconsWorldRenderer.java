@@ -41,9 +41,36 @@ public class IconsWorldRenderer {
 
 		renderBackground();
 		renderIcons();
+		renderStatusArea();
 
 		// DEBUG
 		// debugRenderer.render(iconsWorld.physicalWorld, camera.combined);
+	}
+
+	private void renderStatusArea() {
+		batch.enableBlending();
+		batch.begin();
+
+		int index = 0;
+		for (Icon icon : iconsWorld.icons) {
+			if (icon.status == Status.FINISHED) {
+				if (index % 2 == 0) {
+					Vector3 pos = new Vector3();
+
+					pos.x = camera.viewportWidth - iconsWorld.status_area_width + 0.2f;
+					pos.y = (index / 2) * 1.6f;
+					pos.z = 0;
+
+					Texture texture = icon.texture;
+					TextureRegion region = new TextureRegion(texture, 0, 0,
+							texture.getWidth(), texture.getHeight());
+					batch.draw(region, pos.x, pos.y, 0.8f, 0.8f, 1.6f, 1.6f, 1,
+							1, 90);
+				}
+				index++;
+			}
+		}
+		batch.end();
 	}
 
 	private void renderIcons() {
@@ -94,8 +121,7 @@ public class IconsWorldRenderer {
 	public void renderBackground() {
 		batch.disableBlending();
 		batch.begin();
-		batch.draw(Assets.background, 0, 0, camera.viewportWidth,
-				camera.viewportHeight);
+		batch.draw(Assets.background, 0, 0, iconsWorld.game_area_width, iconsWorld.game_area_height);
 		batch.end();
 	}
 }

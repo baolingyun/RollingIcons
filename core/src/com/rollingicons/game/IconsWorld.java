@@ -11,7 +11,7 @@ import com.rollingicons.game.Icon.Status;
 
 public class IconsWorld {
 
-	private int level = 1;
+	private int level = 8;
 
 	public List<Icon> icons = new ArrayList<Icon>();
 
@@ -19,6 +19,12 @@ public class IconsWorld {
 	public Edge redge = new Edge();
 	public Edge tedge = new Edge();
 	public Edge bedge = new Edge();
+
+	// Control the two areas of the game screen
+	public float status_area_width = 0;
+	public float status_area_height = 0;
+	public float game_area_width = 0;
+	public float game_area_height = 0;
 
 	public World physicalWorld = new World(new Vector2(0, 0), true);
 
@@ -39,14 +45,18 @@ public class IconsWorld {
 		}
 	}
 
-	public void CreateEdge(OrthographicCamera camera) {
-		bedge.Create(physicalWorld, 0, 0.01f, camera.viewportWidth, 0.01f);
-		tedge.Create(physicalWorld, 0, camera.viewportHeight,
-				camera.viewportWidth, 0.01f);
-		ledge.Create(physicalWorld, 0, camera.viewportHeight, 0.01f,
-				camera.viewportHeight);
-		redge.Create(physicalWorld, camera.viewportWidth - 0.01f,
-				camera.viewportHeight, 0.01f, camera.viewportHeight);
+	public void CreateGameArea(float width, float height) {
+		game_area_width = width;
+		game_area_height = height;
+		bedge.Create(physicalWorld, 0, 0.01f, width, 0.01f);
+		tedge.Create(physicalWorld, 0, height, width, 0.01f);
+		ledge.Create(physicalWorld, 0, height, 0.01f, height);
+		redge.Create(physicalWorld, width - 0.01f, height, 0.01f, height);
+	}
+	
+	public void CreateStatusArea(float width, float height) {
+		status_area_width = width;
+		status_area_height = height;
 	}
 
 	public void CheckAndLevelUp() {

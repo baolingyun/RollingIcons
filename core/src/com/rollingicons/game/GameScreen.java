@@ -13,26 +13,28 @@ import com.rollingicons.game.Icon.Status;
 
 public class GameScreen extends ScreenAdapter {
 
-	private float SCREEN_WIDTH = Gdx.graphics.getWidth() / 100;
-	private float SCREEN_HEIGHT = Gdx.graphics.getHeight() / 100;
+	private float STATUS_BOARD_WIDTH = 2;
+	private float GAME_SCREEN_WIDTH = Gdx.graphics.getWidth() / 100;
+	private float GAME_SCREEN_HEIGHT = Gdx.graphics.getHeight() / 100;
 
 	private IconsWorld iconsWorld = new IconsWorld();
-	private OrthographicCamera camera = new OrthographicCamera(SCREEN_WIDTH,
-			SCREEN_HEIGHT);
+	private OrthographicCamera camera = new OrthographicCamera(GAME_SCREEN_WIDTH,
+			GAME_SCREEN_HEIGHT);
 
 	private IconsWorldRenderer iconsWorldRenderer = new IconsWorldRenderer();
 
 	public GameScreen() {
 
-		camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
+		camera.setToOrtho(false, GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
 		camera.update();
 
 		iconsWorldRenderer.SetIconsWorld(iconsWorld);
 		iconsWorldRenderer.SetCamera(camera);
 
-		iconsWorld.CreateEdge(camera);
-
-		iconsWorld.Start();
+		iconsWorld.CreateGameArea(camera.viewportWidth - STATUS_BOARD_WIDTH, camera.viewportHeight);
+        iconsWorld.CreateStatusArea(STATUS_BOARD_WIDTH, camera.viewportHeight);
+		
+        iconsWorld.Start();
 	}
 
 	@Override
