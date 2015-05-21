@@ -46,7 +46,7 @@ public class Icon {
 		fixtureDef.shape = polygon;
 		fixtureDef.density = 0.5f;
 		fixtureDef.friction = 0.0f;
-		fixtureDef.restitution = 0.99f;
+		fixtureDef.restitution = 0.8f;
 		body.setTransform(new Vector2(1, 1), 1);
 		fixture = body.createFixture(fixtureDef);
 		polygon.dispose();

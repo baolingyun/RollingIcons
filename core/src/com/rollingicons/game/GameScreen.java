@@ -8,7 +8,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.rollingicons.game.Icon.Status;
 
 public class GameScreen extends ScreenAdapter {
-
+    
+	private RollingIconsGame game;
+	
 	private float STATUS_BOARD_WIDTH = 2;
 	private float GAME_SCREEN_WIDTH = Gdx.graphics.getWidth() / 100;
 	private float GAME_SCREEN_HEIGHT = Gdx.graphics.getHeight() / 100;
@@ -19,8 +21,10 @@ public class GameScreen extends ScreenAdapter {
 
 	private IconsWorldRenderer iconsWorldRenderer = new IconsWorldRenderer();
 
-	public GameScreen() {
+	public GameScreen(RollingIconsGame game) {
 
+		this.game = game;
+		
 		camera.setToOrtho(false, GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
 		camera.update();
 
@@ -32,7 +36,7 @@ public class GameScreen extends ScreenAdapter {
 		
         iconsWorld.Start();
 	}
-
+	
 	@Override
 	public void render(float delta) {
 		Gdx.graphics.getGL20().glClearColor(0, 0, 0, 0);

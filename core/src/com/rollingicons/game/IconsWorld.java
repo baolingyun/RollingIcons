@@ -26,7 +26,7 @@ public class IconsWorld implements Disposable {
 	public float game_area_width = 0;
 	public float game_area_height = 0;
 
-	public World physicalWorld = new World(new Vector2(0, 0), true);
+	public World physicalWorld = new World(new Vector2(9.8f, 0), true);
 
 	public void CreateIcon(int image_id, Texture texture) {
 		Icon icon = new Icon();

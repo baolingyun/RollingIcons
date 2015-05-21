@@ -8,15 +8,28 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Assets {
+	// Main Menu Screen 
+	public static Texture button_up;
+	public static Texture button_down;
+	public static Texture button_over;
+	
+	// Game Screen Background
 	public static Texture background;
+	// Icons
 	public static List<Texture> icons = new ArrayList<Texture>();
 	
 	public static Texture loadTexture (String file) {
 		return new Texture(Gdx.files.internal(file));
 	}
-	public static void load () {
+
+	public static void load() {
+
+		button_up = loadTexture("data/button_up.png");
+		button_down = loadTexture("data/button_down.png");
+		button_over = loadTexture("data/button_over.png");
+
 		background = loadTexture("data/background.jpg");
-		
+
 		icons.add(loadTexture("data/icons/1.png"));
 		icons.add(loadTexture("data/icons/2.png"));
 		icons.add(loadTexture("data/icons/3.png"));
