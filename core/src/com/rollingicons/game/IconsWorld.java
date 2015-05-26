@@ -2,116 +2,140 @@ package com.rollingicons.game;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
-import com.rollingicons.game.Icon.Status;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class IconsWorld implements Disposable {
 
 	private int level = 4;
 
-	public List<Icon> icons = new ArrayList<Icon>();
+	private List<Icon> icons = new ArrayList<Icon>();
+	private Edge ledge = new Edge();
+	private Edge redge = new Edge();
+	private Edge tedge = new Edge();
+	private Edge bedge = new Edge();
+	
+	private Stage stage;
+	public OrthographicCamera camera;
+	private ScreenViewport viewport;
+	
+	public World physicalWorld;
+	
+	public IconsWorld() {
 
-	public Edge ledge = new Edge();
-	public Edge redge = new Edge();
-	public Edge tedge = new Edge();
-	public Edge bedge = new Edge();
+		// Create the physical world
+		physicalWorld = new World(new Vector2(9.8f, 0), true);
+		
+		// Set up camera and viewport
+		camera = new OrthographicCamera(Gdx.graphics.getWidth()
+				* Constants.units_per_pixel, Gdx.graphics.getHeight()
+				* Constants.units_per_pixel);
+		viewport = new ScreenViewport(camera);
+		viewport.setUnitsPerPixel(Constants.units_per_pixel);
+		
+		// Create scene2d objects 
+		stage = new Stage(viewport);
+		Gdx.input.setInputProcessor(stage);
+		
+		// Create edges around the screen
+		CreateGameArea(camera.viewportWidth, camera.viewportHeight);
+	}
 
-	// Control the two areas of the game screen
-	public float status_area_width = 0;
-	public float status_area_height = 0;
-	public float game_area_width = 0;
-	public float game_area_height = 0;
-
-	public World physicalWorld = new World(new Vector2(9.8f, 0), true);
-
-	public void CreateIcon(int image_id, Texture texture) {
+	public void CreateGameIcon(int image_id, Texture texture) {
 		Icon icon = new Icon();
+		icon.setBounds(5f, 5f, 1.8f, 1.8f);
 		icon.image_id = image_id;
 		icon.texture = texture;
-		icon.Create(physicalWorld);
-		icon.body.applyForceToCenter(-400f, 400f, true);
-		icons.add(icon);
-	}
-
-	public void Start() {
-		icons.clear();
-		for (int i = 0; i < level; ++i) {
-			CreateIcon(i, Assets.icons.get(i));
-			CreateIcon(i, Assets.icons.get(i));
-		}
-	}
-
-	public void CreateGameArea(float width, float height) {
-		game_area_width = width;
-		game_area_height = height;
-		bedge.Create(physicalWorld, 0, 0.01f, width, 0.01f);
-		tedge.Create(physicalWorld, 0, height, width, 0.01f);
-		ledge.Create(physicalWorld, 0, height, 0.01f, height);
-		redge.Create(physicalWorld, width - 0.01f, height, 0.01f, height);
-	}
-	
-	public void CreateStatusArea(float width, float height) {
-		status_area_width = width;
-		status_area_height = height;
-	}
-
-	public void CheckAndLevelUp() {
-		boolean goLevelUp = true;
-		for (Icon one_icon : icons) {
-			if (one_icon.status != Status.FINISHED) {
-				goLevelUp = false;
-			}
-		}
-		if (goLevelUp) {
-			level++;
-			Start();
-		}
-	}
-
-	public void UpdateStatus(Icon icon) {
-		boolean all_hit = true;
-		for (Icon one_icon : icons) {
-			// check if hit wrong icon
-			if (one_icon.status == Status.HIT
-					&& one_icon.image_id != icon.image_id) {
-				UpdateAllStatusRunning();
-				return;
-			}
-			// check if all icons with same image hit
-			if (one_icon.image_id == icon.image_id
-					&& one_icon.status != Status.HIT) {
-				all_hit = false;
-			}
-		}
-
-		if (all_hit) {
-			FinishIconsWithSameImage(icon);
-		}
-	}
-
-	public void UpdateAllStatusRunning() {
-		for (Icon icon : icons) {
-			if (icon.status == Status.HIT) {
-				icon.status = Status.RUNNING;
-			}
-		}
-	}
-
-	public void FinishIconsWithSameImage(Icon icon) {
-		for (Icon one_icon : icons) {
-			if (one_icon.image_id == icon.image_id) {
-				one_icon.status = Status.FINISHED;
-				physicalWorld.destroyBody(one_icon.body);
-			}
-		}
+		AddIcon(icon);
 	}
 
 	@Override
 	public void dispose() {
 		physicalWorld.dispose();
+		stage.dispose();
+	}
+	
+	public void Start() {
+		icons.clear();
+		for (int i = 0; i < level; ++i) {
+			CreateGameIcon(i, Assets.icons.get(i));
+			CreateGameIcon(i, Assets.icons.get(i));
+		}
+	}
+
+	public void render(float delta) {
+		// Do physical actions and update 
+		physicalWorld.step(1 / 60f, 6, 2);
+		UpdateIcons();
+		
+		// Draw
+		stage.act(delta);
+		stage.draw();
+	}
+
+	public void AddIcon(Icon icon) {
+
+		// Calculation
+		float x = icon.getX();
+		float y = icon.getY();
+		float width = icon.getWidth();
+		float height = icon.getHeight();
+		float rotation = icon.getRotation();
+
+		// Create in physicalWorld
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.type = BodyType.DynamicBody;
+		icon.body = physicalWorld.createBody(bodyDef);
+		PolygonShape polygon = new PolygonShape();
+		polygon.setAsBox(width / 2, height / 2);
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = polygon;
+		fixtureDef.density = 0.5f;
+		fixtureDef.friction = 0.0f;
+		fixtureDef.restitution = 0.8f;
+		icon.body.setTransform(new Vector2(x, y), rotation
+				* MathUtils.degreesToRadians);
+		icon.fixture = icon.body.createFixture(fixtureDef);
+		polygon.dispose();
+
+		// Add to stage
+		stage.addActor(icon);
+
+		// Add to my own structure
+		icons.add(icon);
+	}
+
+	private void UpdateIcons() {
+		for (Icon icon : icons) {
+			Vector2 position = icon.body.getPosition();
+			// Center body is center sprite here
+			float hw = icon.getWidth() / 2.0f;
+			float hh = icon.getHeight() / 2.0f;
+			float a = icon.body.getAngle() * MathUtils.radiansToDegrees;
+			float x = position.x - hw;
+			float y = position.y - hh;
+
+			icon.setPosition(x, y);
+			icon.setOrigin(hw, hh);
+			icon.setRotation(a);
+		}
+	}
+	
+	private void CreateGameArea(float width, float height) {
+		bedge.Create(physicalWorld, 0, 0.01f, width, 0.01f);
+		tedge.Create(physicalWorld, 0, height, width, 0.01f);
+		ledge.Create(physicalWorld, 0, height, 0.01f, height);
+		redge.Create(physicalWorld, width - 0.01f, height, 0.01f, height);
 	}
 }

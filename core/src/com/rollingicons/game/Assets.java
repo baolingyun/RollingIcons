@@ -2,23 +2,20 @@ package com.rollingicons.game;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Assets {
-	// Main Menu Screen 
+	// Main Menu Screen
 	public static Texture button_up;
 	public static Texture button_down;
 	public static Texture button_over;
-	
 	// Game Screen Background
 	public static Texture background;
 	// Icons
 	public static List<Texture> icons = new ArrayList<Texture>();
-	
-	public static Texture loadTexture (String file) {
+
+	public static Texture loadTexture(String file) {
 		return new Texture(Gdx.files.internal(file));
 	}
 
