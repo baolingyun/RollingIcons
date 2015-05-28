@@ -14,6 +14,6 @@ public class RollingIconsGame extends Game {
 		mainMenuScreen = new MainMenuScreen(this);
 		gameScreen = new GameScreen(this);
 		// Set start screen
-		setScreen(this.gameScreen);
+		setScreen(this.mainMenuScreen);
 	}
 }

@@ -2,12 +2,14 @@ package com.rollingicons.game;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -18,70 +20,59 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class IconsWorld implements Disposable {
 
-	private int level = 4;
+	// Debug
+	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
-	private List<Icon> icons = new ArrayList<Icon>();
-	private Edge ledge = new Edge();
-	private Edge redge = new Edge();
-	private Edge tedge = new Edge();
-	private Edge bedge = new Edge();
-	
-	private Stage stage;
 	public OrthographicCamera camera;
-	private ScreenViewport viewport;
-	
 	public World physicalWorld;
-	
+
+	private ScreenViewport viewport;
+	private Stage stage;
+
 	public IconsWorld() {
 
 		// Create the physical world
 		physicalWorld = new World(new Vector2(9.8f, 0), true);
-		
+
 		// Set up camera and viewport
 		camera = new OrthographicCamera(Gdx.graphics.getWidth()
 				* Constants.units_per_pixel, Gdx.graphics.getHeight()
 				* Constants.units_per_pixel);
 		viewport = new ScreenViewport(camera);
 		viewport.setUnitsPerPixel(Constants.units_per_pixel);
-		
-		// Create scene2d objects 
+
+		// Create scene2d objects
 		stage = new Stage(viewport);
 		Gdx.input.setInputProcessor(stage);
-		
-		// Create edges around the screen
-		CreateGameArea(camera.viewportWidth, camera.viewportHeight);
-	}
 
-	public void CreateGameIcon(int image_id, Texture texture) {
-		Icon icon = new Icon();
-		icon.setBounds(5f, 5f, 1.8f, 1.8f);
-		icon.image_id = image_id;
-		icon.texture = texture;
-		AddIcon(icon);
+		// Create edges around the screen
+		AddEdges(camera.viewportWidth - Constants.static_area_width,
+				camera.viewportHeight);
 	}
 
 	@Override
 	public void dispose() {
-		physicalWorld.dispose();
 		stage.dispose();
-	}
-	
-	public void Start() {
-		icons.clear();
-		for (int i = 0; i < level; ++i) {
-			CreateGameIcon(i, Assets.icons.get(i));
-			CreateGameIcon(i, Assets.icons.get(i));
-		}
+		physicalWorld.dispose();
 	}
 
 	public void render(float delta) {
-		// Do physical actions and update 
-		physicalWorld.step(1 / 60f, 6, 2);
-		UpdateIcons();
-		
-		// Draw
+
+		// Let the actors move
 		stage.act(delta);
+
+		// Draw actors
 		stage.draw();
+
+		// Debug only
+		debugRenderer.render(physicalWorld, camera.combined);
+	}
+
+	public void AddEdges(float width, float height) {
+		Edge.Create(physicalWorld, 0, 0.01f, width, 0.01f);
+		Edge.Create(physicalWorld, 0, height, width, 0.01f);
+		Edge.Create(physicalWorld, 0, height, 0.01f, height);
+		Edge.Create(physicalWorld, width - 0.01f, height, 0.01f, height);
 	}
 
 	public void AddIcon(Icon icon) {
@@ -102,8 +93,8 @@ public class IconsWorld implements Disposable {
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = polygon;
 		fixtureDef.density = 0.5f;
-		fixtureDef.friction = 0.0f;
-		fixtureDef.restitution = 0.8f;
+		fixtureDef.friction = 1.0f;
+		fixtureDef.restitution = 0.0f;
 		icon.body.setTransform(new Vector2(x, y), rotation
 				* MathUtils.degreesToRadians);
 		icon.fixture = icon.body.createFixture(fixtureDef);
@@ -111,31 +102,22 @@ public class IconsWorld implements Disposable {
 
 		// Add to stage
 		stage.addActor(icon);
-
-		// Add to my own structure
-		icons.add(icon);
 	}
 
-	private void UpdateIcons() {
-		for (Icon icon : icons) {
-			Vector2 position = icon.body.getPosition();
-			// Center body is center sprite here
-			float hw = icon.getWidth() / 2.0f;
-			float hh = icon.getHeight() / 2.0f;
-			float a = icon.body.getAngle() * MathUtils.radiansToDegrees;
-			float x = position.x - hw;
-			float y = position.y - hh;
-
-			icon.setPosition(x, y);
-			icon.setOrigin(hw, hh);
-			icon.setRotation(a);
-		}
+	public void AddBackground(Texture texture) {
+		Background background = new Background();
+		background.texture = Assets.background;
+		background.setBounds(0, 0, camera.viewportWidth
+				- Constants.static_area_width, camera.viewportHeight);
+		// Add to stage
+		stage.addActor(background);
 	}
-	
-	private void CreateGameArea(float width, float height) {
-		bedge.Create(physicalWorld, 0, 0.01f, width, 0.01f);
-		tedge.Create(physicalWorld, 0, height, width, 0.01f);
-		ledge.Create(physicalWorld, 0, height, 0.01f, height);
-		redge.Create(physicalWorld, width - 0.01f, height, 0.01f, height);
+
+	public void AddGameIcon(Texture texture) {
+		Icon icon = new Icon();
+		icon.setBounds(5f, 5f, 1.8f, 1.8f);
+		icon.texture = texture;
+		// Add to stage
+		AddIcon(icon);
 	}
 }

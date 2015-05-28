@@ -3,15 +3,19 @@ package com.rollingicons.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 public class GameScreen extends ScreenAdapter {
 
-	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 	private IconsWorld iconsWorld = new IconsWorld();
 
 	public GameScreen(RollingIconsGame game) {
-		iconsWorld.Start();
+
+		iconsWorld.AddBackground(Assets.background);
+
+		for (int i = 0; i < 10; ++i) {
+			iconsWorld.AddGameIcon(Assets.icons.get(i));
+			iconsWorld.AddGameIcon(Assets.icons.get(i));
+		}
 	}
 
 	@Override
@@ -20,9 +24,8 @@ public class GameScreen extends ScreenAdapter {
 		Gdx.graphics.getGL20().glClear(
 				GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
+		iconsWorld.physicalWorld.step(1 / 60f, 6, 2);
 		iconsWorld.render(delta);
-		debugRenderer.render(iconsWorld.physicalWorld,
-				iconsWorld.camera.combined);
 	}
 
 	@Override

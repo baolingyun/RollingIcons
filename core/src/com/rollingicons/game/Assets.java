@@ -22,8 +22,8 @@ public class Assets {
 	public static void load() {
 
 		button_up = loadTexture("data/button_up.png");
-		button_down = loadTexture("data/button_down.png");
-		button_over = loadTexture("data/button_over.png");
+		// button_down = loadTexture("data/button_down.png");
+		// button_over = loadTexture("data/button_over.png");
 
 		background = loadTexture("data/background.jpg");
 

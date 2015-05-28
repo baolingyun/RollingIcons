@@ -3,6 +3,8 @@ package com.rollingicons.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -15,31 +17,34 @@ public class Icon extends Actor {
 	// Drawing
 	public Texture texture;
 
-	public int image_id = 0;
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
 
-	public enum Status {
-		RUNNING, HIT, FINISHED
-	}
+		if (texture != null) {
+			TextureRegion region = new TextureRegion(texture, 0, 0,
+					texture.getWidth(), texture.getHeight());
 
-	public Status status = Status.RUNNING;
-
-	public boolean HitTest(float x, float y) {
-		return fixture.testPoint(x, y);
-	}
-
-	public void Hit() {
-		if (status == Status.RUNNING) {
-			status = Status.HIT;
+			batch.draw(region, getX(), getY(), getOriginX(), getOriginY(),
+					getWidth(), getHeight(), getScaleX(), getScaleY(),
+					getRotation());
 		}
 	}
-	
-    @Override
-    public void draw (Batch batch, float parentAlpha) {
 
-		TextureRegion region = new TextureRegion(texture, 0, 0,
-				texture.getWidth(), texture.getHeight());
-		
-		 batch.draw(region, getX(), getY(), getOriginX(), getOriginY(),
-		            getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-    }
+	@Override
+	public void act(float delta) {
+
+		Vector2 position = body.getPosition();
+		// Center body is center sprite here
+		float hw = getWidth() / 2.0f;
+		float hh = getHeight() / 2.0f;
+		float a = body.getAngle() * MathUtils.radiansToDegrees;
+		float x = position.x - hw;
+		float y = position.y - hh;
+
+		setPosition(x, y);
+		setOrigin(hw, hh);
+		setRotation(a);
+
+		super.act(delta);
+	}
 }
