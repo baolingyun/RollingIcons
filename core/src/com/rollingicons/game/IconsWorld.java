@@ -43,11 +43,6 @@ public class IconsWorld implements Disposable {
 
 		// Create scene2d objects
 		stage = new Stage(viewport);
-		Gdx.input.setInputProcessor(stage);
-
-		// Create edges around the screen
-		AddEdges(camera.viewportWidth - Constants.static_area_width,
-				camera.viewportHeight);
 	}
 
 	@Override
@@ -66,6 +61,14 @@ public class IconsWorld implements Disposable {
 
 		// Debug only
 		debugRenderer.render(physicalWorld, camera.combined);
+	}
+	
+	public void Active(boolean active) {
+		if(active) {
+			Gdx.input.setInputProcessor(stage);
+		} else {
+			Gdx.input.setInputProcessor(null);
+		}
 	}
 
 	public void AddEdges(float width, float height) {

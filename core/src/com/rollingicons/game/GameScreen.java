@@ -6,10 +6,14 @@ import com.badlogic.gdx.graphics.GL20;
 
 public class GameScreen extends ScreenAdapter {
 
-	private IconsWorld iconsWorld = new IconsWorld();
+	private IconsWorld iconsWorld;
 
 	public GameScreen(RollingIconsGame game) {
 
+		iconsWorld = new IconsWorld();
+		// Create edges around the screen
+		iconsWorld.AddEdges(iconsWorld.camera.viewportWidth - Constants.static_area_width,
+				iconsWorld.camera.viewportHeight);
 		iconsWorld.AddBackground(Assets.background);
 
 		for (int i = 0; i < 10; ++i) {
